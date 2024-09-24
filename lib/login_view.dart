@@ -21,10 +21,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
   void login() {
     // if (emailController.text.trim().isEmail) return;
     // if (passwordController.text.trim().length < 4) return;
-    if (emailController.text.trim().isEmail &&
-        passwordController.text.trim().length > 4) {
-      return;
-    }
+    if (!emailController.text.trim().isEmail && 
+    passwordController.text.trim().length <= 4) {
+  return;
+}
+
     final List<String> list = [
       emailController.text.trim(),
       passwordController.text.trim(),
@@ -41,6 +42,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
         .catchError(
           (err) => Grock.toast(
             text: err.toString(),
+            textStyle: TextStyle(color: Colors.black)
           ),
         );
   }
@@ -48,6 +50,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+        title: Text('Login',
+        style: TextStyle(color: Colors.black,fontSize: 25,fontWeight: FontWeight.bold),
+        ),
+      ),
       body: ListView(
         children: [
           SizedBox(

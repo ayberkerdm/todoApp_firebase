@@ -6,6 +6,7 @@ import 'package:todo_app3/firebase_options.dart';
 
 import 'package:todo_app3/home_view.dart';
 import 'package:todo_app3/login_view.dart';
+import 'package:todo_app3/splash_view.dart';
 
 void main() async {
   WidgetsFlutterBinding();
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: Grock.navigationKey,
       scaffoldMessengerKey: Grock.scaffoldMessengerKey,
       theme: ThemeData(useMaterial3: true),
-      home:  const LoginView(),
+      home:  const SplashScreen(),
     );
   }
 }

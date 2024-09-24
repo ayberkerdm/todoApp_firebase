@@ -1,47 +1,54 @@
-import 'package:grock/grock.dart';
-import 'package:todo_app3/home_view.dart';
-import 'package:todo_app3/login_view.dart';
-import 'package:todo_app3/provider/firebase_auth_provider.dart';
+import 'dart:async'; // Timer için gerekli
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:todo_app3/login_view.dart';
 
-class SplashView extends ConsumerStatefulWidget {
-  const SplashView({super.key});
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<SplashView> createState() => _SplashViewState();
+  _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashViewState extends ConsumerState<SplashView> {
-  void _init() {
-    Future.delayed(
-      500.milliseconds,
-      () {
-        final user = ref.read(currentUserProvider);
-        if (user != null) {
-          Grock.toRemove(
-            const HomeView(),
-          );
-        } else {
-          Grock.toRemove(
-            const LoginView(),
-          );
-        }
-      },
-    );
-  }
-
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _init();
+    Timer(const Duration(seconds: 2), () {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const LoginView()),
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.orange,
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            
+            SizedBox(height: 30),
+            Text(
+              'To Do List',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 20),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 40),
+              child: LinearProgressIndicator(
+                backgroundColor: Colors.white,
+                color: Colors.amber,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

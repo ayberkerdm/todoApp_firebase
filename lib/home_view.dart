@@ -54,8 +54,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
       ),
       body: ref.watch(getTodoProvider).when(
             data: (value) {
-              final data =
-                  value.map((e) => TodoModel.fromMap(e.data())).toList();
+              // final data =
+              //     value.map((e) => TodoModel.fromMap(e.data())).toList();
+              final data = value.map((e){
+                final todoData = e.data();
+                return todoData != null ? TodoModel.fromMap(todoData) : null;
+              }).where((todo) => todo != null).cast<TodoModel>().toList();
               return RefreshIndicator.adaptive(
                 onRefresh: () {
                   return Future.value(
@@ -89,6 +93,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                               item.todo ?? "",
                               style: TextStyle(
                                 fontSize: context.val5x,
+                                decoration: item.done == true ? TextDecoration.lineThrough : TextDecoration.none,
                               ),
                             ),
                             leading: Checkbox(
@@ -107,12 +112,35 @@ class _HomeViewState extends ConsumerState<HomeView> {
                             ),
                             trailing: IconButton(
                               onPressed: () async {
-                                await value.elementAt(index).reference.delete();
+                                //await value.elementAt(index).reference.delete();
+                                showDialog(context: context, 
+                                builder: (BuildContext context){
+                                  return AlertDialog(
+                                    title:Text('Silme İşlemi'),
+                                    content: Text('Bu öğe silinecek emin misin'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                        Navigator.of(context).pop(); // Popup'ı kapat
+                                      },
+                                        child: const Text("Hayır"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                        await value.elementAt(index).reference.delete();
+                                        Navigator.of(context).pop(); // Popup'ı kapat
+                                      },
+                                        child: const Text("Evet"),
+                                      ),
+                                    ],
+                                  );
+                                });
                               },
                               icon: const Icon(
                                 Icons.delete,
                                 color: Colors.red,
                               ),
+                              
                             ),
                           ),
                         ),
@@ -127,11 +155,33 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ),
             error: (error, stackTrace) {
               return Center(
-                child: Icon(
-                  Icons.warning,
-                  color: Colors.red,
-                  size: context.val15x,
-                ),
+                child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.warning,
+          color: Colors.red,
+          size: context.val15x,
+        ),
+        SizedBox(height: 10),
+        Text(
+          'Bir hata oluştu:',
+          style: TextStyle(color: Colors.red, fontSize: context.val5x),
+        ),
+        SizedBox(height: 10),
+        Text(
+          error.toString(), // Hata mesajını gösterir
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.black),
+        ),
+        SizedBox(height: 10),
+        Text(
+          stackTrace.toString(), // Yığın izini (stackTrace) gösterir
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.black54),
+        ),
+      ],
+    ),
               );
             },
           ),

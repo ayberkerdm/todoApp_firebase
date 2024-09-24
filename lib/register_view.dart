@@ -52,12 +52,14 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Register',
+        style: TextStyle(color: Colors.black,fontSize: 25,fontWeight: FontWeight.bold),
+        ),
+      ),
       body: ListView(
         children: [
-          Image.asset(
-            "asset/images/register.png",
-            scale: context.val1x,
-          ),
+          SizedBox(height: 250,),
           SpecialTextField(
             label: 'Mail',
             icon: Icons.mail_outline_outlined,
